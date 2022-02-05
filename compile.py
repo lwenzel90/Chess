@@ -23,7 +23,7 @@ def get_chess_build_path():
 def build_gcc_compile_obj():
     """Builds the command: g++ -c <.cpp files> command """
     home = os.path.expanduser("~")
-    command = "g++ -c "
+    command = "g++ -g -Wall -c "
     src_files = os.listdir(get_chess_src_path())
     cpp_extension = ".cpp"
     cpp_files = [file for file in src_files if cpp_extension in file]
@@ -36,7 +36,7 @@ def build_gcc_compile_obj():
 
 def build_gcc_chess_exe():
     """Builds the command: g++ <.o files> -o chess <includes>"""
-    command = "g++ "
+    command = "g++ -g -Wall "
     build_files = os.listdir(get_chess_build_path())
     o_extension = ".o"
     o_files = []
@@ -57,12 +57,12 @@ def main():
         os.mkdir(build_dir)
 
     os.chdir(build_dir)
-    retval = os.system(build_mycpplint())
-    if retval:
-        logging.error("cpplint src_dir/*pp has failed. Are there files at %s?"
-                      % get_chess_src_path())
-    else:
-        logging.info("cpplint src_dir/*pp command was successful")
+    #retval = os.system(build_mycpplint())
+    #if retval:
+    #    logging.error("cpplint src_dir/*pp has failed. Are there files at %s?"
+    #                  % get_chess_src_path())
+    #else:
+    #    logging.info("cpplint src_dir/*pp command was successful")
 
     gcc_compile_cmd = build_gcc_compile_obj() 
     retval = os.system(gcc_compile_cmd)
