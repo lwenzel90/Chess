@@ -1,15 +1,16 @@
 // Copyright 2022 Logan Wenzel.
-#include <SFML/Graphics.hpp>
+
+
+#include "board.hpp"
 // Classes to implement
 // Board,
 // pieces,
 // overlord game class
 // pgn reader
 // cpu ai
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 800), "Chess Game");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -20,7 +21,8 @@ int main() {
         }
 
         window.clear();
-        window.draw(shape);
+        Board board(&window);
+
         window.display();
     }
 
