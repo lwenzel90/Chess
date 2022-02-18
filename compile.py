@@ -51,18 +51,18 @@ def build_gcc_chess_exe():
 
 
 def main():
-    logging.basicConfig(filename = 'chessCompile.txt')
+    logging.basicConfig(filename = 'chessCompile.log')
     build_dir = os.path.join(os.getcwd(), 'build')
     if not os.path.exists(build_dir):
         os.mkdir(build_dir)
 
     os.chdir(build_dir)
-    #retval = os.system(build_mycpplint())
-    #if retval:
-    #    logging.error("cpplint src_dir/*pp has failed. Are there files at %s?"
-    #                  % get_chess_src_path())
-    #else:
-    #    logging.info("cpplint src_dir/*pp command was successful")
+    retval = os.system(build_mycpplint())
+    if retval:
+        logging.error("cpplint src_dir/*pp has failed. Are there files at %s?"
+                      % get_chess_src_path())
+    else:
+        logging.info("cpplint src_dir/*pp command was successful")
 
     gcc_compile_cmd = build_gcc_compile_obj() 
     retval = os.system(gcc_compile_cmd)
@@ -74,7 +74,7 @@ def main():
     
     retval = os.system(build_gcc_chess_exe())
     if retval:
-        logging.error("g++ <o_files> -o chess <includes> has failed. Are the files in %?"
+        logging.error("g++ <o_files> -o chess <includes> has failed. Are the files in %s?"
                       % get_chess_build_path())
     else:
         logging.info("g++ -c <files> command was successful")
