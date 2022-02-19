@@ -2,94 +2,32 @@
 
 #include "board.hpp"
 #include <iostream>
-#include <SFML/Graphics/Image.hpp> // sf::Image
-#include <SFML/Graphics/Font.hpp> // sf::Image
 #include <vector>
-#include "piece.hpp"
+#include <SFML/Window/WindowStyle.hpp>  // sf::Image
 
-Board::Board(sf::RenderWindow *window) {
+Board::Board(sf::RenderWindow *window) : pawn(0),
+                                         knight(1),
+                                         bishop(2),
+                                         rook(4),
+                                         queen(8),
+                                         king(16) {
     mSquareLen = 100;
-    
-    if (wKingImage.loadFromFile("/home/logan/chess/assets/tile000.png")) {
-        wKingTexture.loadFromImage(wKingImage);
-        wKingSprite.setTexture(wKingTexture);
-    } else {
-        std::cout << "Could not open tile png" << std::endl;
-    }
-    if (wQueenImage.loadFromFile("/home/logan/chess/assets/tile001.png")) {
-        wQueenTexture.loadFromImage(wQueenImage);
-        wQueenSprite.setTexture(wQueenTexture);
-    } else {
-        std::cout << "Could not open tile png" << std::endl;
-    }
-    if (wBishopImage.loadFromFile("/home/logan/chess/assets/tile002.png")) {
-        wBishopTexture.loadFromImage(wBishopImage);
-        wBishopSprite.setTexture(wBishopTexture);
-    } else {
-        std::cout << "Could not open tile png" << std::endl;
-    }
-    if (wKnightImage.loadFromFile("/home/logan/chess/assets/tile003.png")) {
-        wKnightTexture.loadFromImage(wKnightImage);
-        wKnightSprite.setTexture(wKnightTexture);
-    } else {
-        std::cout << "Could not open tile png" << std::endl;
-    }
-    if (wRookImage.loadFromFile("/home/logan/chess/assets/tile004.png")) {
-        wRookTexture.loadFromImage(wRookImage);
-        wRookSprite.setTexture(wRookTexture);
-    } else {
-        std::cout << "Could not open tile png" << std::endl;
-    }
-    if (wPawnImage.loadFromFile("/home/logan/chess/assets/tile005.png")) {
-        wPawnTexture.loadFromImage(wPawnImage);
-        wPawnSprite.setTexture(wPawnTexture);
-    } else {
-        std::cout << "Could not open tile png" << std::endl;
-    }
-
 }
 
 bool Board::draw(sf::RenderWindow *window) {
     if (!window) {
         return false;
     }
-    
-    sf::Vector2u windowSize;
-    if (window) {
-        windowSize = window->getSize();
-        if (window->isOpen())
-        {
-        } else {
-            std::cout << "The window is not open!!!! :o" << std::endl;
-            return false;
-        }
-    } else {
-        return false;
-    }
 
-    // Calculate margin
-    unsigned int width = windowSize.x;
-    unsigned int height = windowSize.y;
-
-    double xMargin = (width - (mSquareLen * 8)) / 2;
-    double yMargin = 0;
-    if (height > 800) {
-        yMargin = (height - (mSquareLen * 8)) / 2;
-    } else {
-        yMargin = 0;
-    }
-    if (width > 800) {
-        xMargin = (width - (mSquareLen * 8)) / 2;
-    } else {
-        xMargin = 0;
-    }
-
-    double offset = 3; // The icons are slightly off from centered adjust w/ offset
+    double OFFSET = 3;  // The icons are slightly off from centered adjust w/
+                        // OFFSET
     double xPos = 0;
     double yPos = 0;
     bool isLightSquare = true;
-    size_t idx = 0;
+    size_t idx = 0;  // This is used to keep mBoardSquares as a flat list for 2D
 
+    sf::Color TAN = sf::Color(60, 40, 5, 255);
+    sf::Color BROWN = sf::Color(210, 190, 173, 255);
     for (size_t file = 0; file < 8; file++) {
         for (size_t rank = 0; rank < 8; rank++) {
             mBoardSquares.push_back(
@@ -98,34 +36,73 @@ bool Board::draw(sf::RenderWindow *window) {
             isLightSquare = (file + rank) % 2 != 0;
             // Set color
             if (isLightSquare) {
-                mBoardSquares[idx]->setFillColor(sf::Color(60, 40, 5, 255));
+                mBoardSquares[idx]->setFillColor(TAN);
             } else {
-                mBoardSquares[idx]->setFillColor(sf::Color(210, 190, 173, 255));
+                mBoardSquares[idx]->setFillColor(BROWN);
             }
             // Set position
-            xPos = xMargin + (file * mSquareLen);
-            yPos = yMargin + (rank * mSquareLen);
+            xPos = (file * mSquareLen);
+            yPos = (rank * mSquareLen);
             mBoardSquares[idx]->setPosition(xPos, yPos);
             if (mBoardSquares[idx]) {
                 window->draw(*mBoardSquares[idx]);
             }
-
             idx++;
         }
     }
-    wKingSprite.setPosition(400.0 - offset, 700.0 - offset);
-    wQueenSprite.setPosition(300.0 - offset, 700.0 - offset);
-    wRookSprite.setPosition(0.0 - offset, 700.0 - offset);
-    wBishopSprite.setPosition(500.0 - offset, 700.0 - offset);
-    wPawnSprite.setPosition(0.0 - offset, 600.0 - offset);
-    wKnightSprite.setPosition(600.0 - offset, 700.0 - offset);
+    // TODO(Logan) Set locations for pieces based on a grid system either
+    //             functions could look like the following setPos("e4"),
+    //             setPos(row,col) // [0-7]
 
-    window->draw(wKingSprite);
-    window->draw(wQueenSprite);
-    window->draw(wBishopSprite);
-    window->draw(wRookSprite);
-    window->draw(wPawnSprite);
-    window->draw(wKnightSprite);
+    sf::Sprite myPawn1 = pawn.getSprite();
+    sf::Sprite myPawn2 = pawn.getSprite();
+    sf::Sprite myPawn3 = pawn.getSprite();
+    sf::Sprite myPawn4 = pawn.getSprite();
+    sf::Sprite myPawn5 = pawn.getSprite();
+    sf::Sprite myPawn6 = pawn.getSprite();
+    sf::Sprite myPawn7 = pawn.getSprite();
+    sf::Sprite myPawn8 = pawn.getSprite();
+    sf::Sprite myKnight1 = knight.getSprite();
+    sf::Sprite myKnight2 = knight.getSprite();
+    sf::Sprite myBishop1 = bishop.getSprite();
+    sf::Sprite myBishop2 = bishop.getSprite();
+    sf::Sprite myRook1 = rook.getSprite();
+    sf::Sprite myRook2 = rook.getSprite();
+    sf::Sprite myQueen = queen.getSprite();
+    sf::Sprite myKing = king.getSprite();
+    myPawn1.setPosition(0.0 - OFFSET, 600.0 - OFFSET);
+    myPawn2.setPosition(100.0 - OFFSET, 600.0 - OFFSET);
+    myPawn3.setPosition(200.0 - OFFSET, 600.0 - OFFSET);
+    myPawn4.setPosition(300.0 - OFFSET, 600.0 - OFFSET);
+    myPawn5.setPosition(400.0 - OFFSET, 600.0 - OFFSET);
+    myPawn6.setPosition(500.0 - OFFSET, 600.0 - OFFSET);
+    myPawn7.setPosition(600.0 - OFFSET, 600.0 - OFFSET);
+    myPawn8.setPosition(700.0 - OFFSET, 600.0 - OFFSET);
+    myKnight1.setPosition(100.0 - OFFSET, 700.0 - OFFSET);
+    myKnight2.setPosition(600.0 - OFFSET, 700.0 - OFFSET);
+    myBishop1.setPosition(200.0 - OFFSET, 700.0 - OFFSET);
+    myBishop2.setPosition(500.0 - OFFSET, 700.0 - OFFSET);
+    myRook1.setPosition(0.0 - OFFSET, 700.0 - OFFSET);
+    myRook2.setPosition(700.0 - OFFSET, 700.0 - OFFSET);
+    myQueen.setPosition(300.0 - OFFSET, 700.0 - OFFSET);
+    myKing.setPosition(400.0 - OFFSET, 700.0 - OFFSET);
+
+    window->draw(myPawn1);
+    window->draw(myPawn2);
+    window->draw(myPawn3);
+    window->draw(myPawn4);
+    window->draw(myPawn5);
+    window->draw(myPawn6);
+    window->draw(myPawn7);
+    window->draw(myPawn8);
+    window->draw(myKnight1);
+    window->draw(myKnight2);
+    window->draw(myBishop1);
+    window->draw(myBishop2);
+    window->draw(myRook1);
+    window->draw(myRook2);
+    window->draw(myQueen);
+    window->draw(myKing);
     return true;
 }
 
